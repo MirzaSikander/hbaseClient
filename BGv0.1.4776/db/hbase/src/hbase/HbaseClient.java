@@ -13,11 +13,11 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.MasterNotRunningException;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.ZooKeeperConnectionException;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
@@ -132,22 +132,25 @@ public class HbaseClient extends DB {
 		} catch (ZooKeeperConnectionException e) {
 			e.printStackTrace();
 			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 
 	@Override
 	public void createSchema(Properties props) {
 
-		HTableDescriptor users = new HTableDescriptor(USER_TABLE);
+		HTableDescriptor users = new HTableDescriptor(TableName.valueOf(USER_TABLE));
 		users.addFamily(new HColumnDescriptor(PROFILE_INFO));
 		users.addFamily(new HColumnDescriptor(IMAGES));
 		users.addFamily(new HColumnDescriptor(FRIENDS).setMaxVersions(10));
 
-		HTableDescriptor resources = new HTableDescriptor(RESOURCE_TABLE);
+		HTableDescriptor resources = new HTableDescriptor(TableName.valueOf(RESOURCE_TABLE));
 		resources.addFamily(new HColumnDescriptor(RESOURCE_INFO));
 
-		HTableDescriptor manipulations = new HTableDescriptor(
-				MANIPULATION_TABLE);
+		HTableDescriptor manipulations = new HTableDescriptor(TableName.valueOf(
+				MANIPULATION_TABLE));
 		manipulations
 				.addFamily(new HColumnDescriptor(MANIIPULATION_DEFAULT_CF));
 
