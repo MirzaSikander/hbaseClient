@@ -22,9 +22,7 @@ import org.apache.hadoop.hbase.ZooKeeperConnectionException;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.apache.hadoop.hbase.client.HConnection;
-import org.apache.hadoop.hbase.client.HConnectionManager;
-import org.apache.hadoop.hbase.client.HTableInterface;
+import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Increment;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
@@ -46,7 +44,7 @@ import edu.usc.bg.base.DBException;
 import edu.usc.bg.base.ObjectByteIterator;
 import edu.usc.bg.base.StringByteIterator;
 
-public class HbaseClient extends DB {
+public abstract class HbaseClient extends DB {
 	public static final String USER_TABLE = "Users";
 	public static final byte[] PROFILE_INFO = "pi".getBytes();
 	public static final byte[] USER_NAME = "un".getBytes();
@@ -91,7 +89,7 @@ public class HbaseClient extends DB {
 	public static final byte[] MODIFIER_ID = "mid".getBytes();
 
 	Configuration conf;
-	HConnection connection;
+	HTable hTableUsers, hTableResources, hTableManipulations;
 	HashMap<String, byte[]> mappingToBG;
 
 	// userid, username, pw, fname, lname, gender, dob, jdate, ldate, address,
@@ -124,11 +122,18 @@ public class HbaseClient extends DB {
 	@Override
 	public boolean init() throws DBException {
 		conf = HBaseConfiguration.create();
+		HBaseAdmin hba;
 		try {
-			connection = HConnectionManager.createConnection(conf);
-//			conf.addResource(new Path(
-//					"/Users/mirzasikander/hbase/hbase-0.94.16/conf/hbase-site.xml"));
-			return true;
+			hba = new HBaseAdmin(conf);
+			if (hba.tableExists(USER_TABLE))
+				hTableUsers = new HTable(conf, USER_TABLE);
+			if (hba.tableExists(RESOURCE_TABLE))
+				hTableResources = new HTable(conf, RESOURCE_TABLE);
+			if (hba.tableExists(MANIPULATION_TABLE))
+				hTableManipulations = new HTable(conf, MANIPULATION_TABLE);
+			// conf.addResource(new Path(
+			// "/Users/mirzasikander/hbase/hbase-0.94.16/conf/hbase-site.xml"));
+			hba.close();
 		} catch (ZooKeeperConnectionException e) {
 			e.printStackTrace();
 			return false;
@@ -136,28 +141,31 @@ public class HbaseClient extends DB {
 			e.printStackTrace();
 			return false;
 		}
+		return true;
 	}
 
 	@Override
 	public void createSchema(Properties props) {
 
-		HTableDescriptor users = new HTableDescriptor(TableName.valueOf(USER_TABLE));
+		HTableDescriptor users = new HTableDescriptor(
+				TableName.valueOf(USER_TABLE));
 		users.addFamily(new HColumnDescriptor(PROFILE_INFO));
 		users.addFamily(new HColumnDescriptor(IMAGES));
 		users.addFamily(new HColumnDescriptor(FRIENDS).setMaxVersions(10));
 
-		HTableDescriptor resources = new HTableDescriptor(TableName.valueOf(RESOURCE_TABLE));
+		HTableDescriptor resources = new HTableDescriptor(
+				TableName.valueOf(RESOURCE_TABLE));
 		resources.addFamily(new HColumnDescriptor(RESOURCE_INFO));
 
-		HTableDescriptor manipulations = new HTableDescriptor(TableName.valueOf(
-				MANIPULATION_TABLE));
+		HTableDescriptor manipulations = new HTableDescriptor(
+				TableName.valueOf(MANIPULATION_TABLE));
 		manipulations
 				.addFamily(new HColumnDescriptor(MANIIPULATION_DEFAULT_CF));
 
 		System.out.println("connecting");
 		HBaseAdmin hba;
 		try {
-			hba = new HBaseAdmin(connection);
+			hba = new HBaseAdmin(conf);
 			// Removing old versions
 			if (hba.tableExists(USER_TABLE)) {
 				hba.disableTable(USER_TABLE);
@@ -176,8 +184,12 @@ public class HbaseClient extends DB {
 			}
 			System.out.println("Creating Table");
 			hba.createTable(users);
+			System.out.println("Created Users");
 			hba.createTable(resources);
+			System.out.println("Created Resources");
 			hba.createTable(manipulations);
+			System.out.println("Created Manipulations");
+			hba.close();
 		} catch (MasterNotRunningException e) {
 			e.printStackTrace();
 		} catch (ZooKeeperConnectionException e) {
@@ -192,9 +204,16 @@ public class HbaseClient extends DB {
 	@Override
 	public void cleanup(boolean warmup) throws DBException {
 		try {
-			connection.close();
+			if (hTableUsers != null)
+				hTableUsers.close();
+			if (hTableResources != null)
+				hTableResources.close();
+			if (hTableManipulations != null)
+				hTableManipulations.close();
+			if (conf != null)
+				conf.clear();
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace(System.out);
 		}
 	}
 
@@ -234,15 +253,15 @@ public class HbaseClient extends DB {
 						Bytes.toBytes(values.get("tpic").toString()));
 			}
 
-			HTableInterface table = null;
 			try {
-				table = connection.getTable(USER_TABLE);
+				if (hTableUsers == null)
+					hTableUsers = new HTable(conf, USER_TABLE);
 				try {
-					table.put(put);
+					hTableUsers.put(put);
 				} catch (IOException e) {
 					throw e;
 				} finally {
-					table.close();
+					hTableUsers.close();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -262,17 +281,18 @@ public class HbaseClient extends DB {
 			put.add(RESOURCE_INFO, RESOURCE_DOC,
 					Bytes.toBytes(values.get("doc").toString()));
 
-			HTableInterface resources = null;
 			try {
-				resources = connection.getTable(RESOURCE_TABLE);
+				if (hTableResources == null) {
+					hTableResources = new HTable(conf, RESOURCE_TABLE);
+				}
 				try {
 
-					resources.put(put);
+					hTableResources.put(put);
 				} catch (IOException e) {
 					throw e;
 				} finally {
 
-					resources.close();
+					hTableResources.close();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -285,15 +305,16 @@ public class HbaseClient extends DB {
 					.get("walluserid").toString()));
 			inc.addColumn(PROFILE_INFO, RESOURCE_COUNT, 1L);
 
-			HTableInterface users = null;
 			try {
-				users = connection.getTable(USER_TABLE);
+				if (hTableUsers == null) {
+					hTableUsers = new HTable(conf, USER_TABLE);
+				}
 				try {
-					users.increment(inc);
+					hTableUsers.increment(inc);
 				} catch (IOException e) {
 					throw e;
 				} finally {
-					users.close();
+					hTableUsers.close();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -316,8 +337,9 @@ public class HbaseClient extends DB {
 		scan.setStartRow(Bytes.toBytes("0")); // start key is inclusive
 		// scan.setStopRow(Bytes.toBytes("10")); // stop key is exclusive
 		try {
-			HTableInterface Users = connection.getTable(USER_TABLE);
-			ResultScanner rs = Users.getScanner(scan);
+			if (hTableUsers == null)
+				hTableUsers = new HTable(conf, USER_TABLE);
+			ResultScanner rs = hTableUsers.getScanner(scan);
 			try {
 				for (Result r = rs.next(); r != null; r = rs.next()) {
 					usercount++;
@@ -362,7 +384,7 @@ public class HbaseClient extends DB {
 				result.put("avgpendingperuser",
 						Integer.toString(totalpending / usercount));
 			}
-			Users.close();
+			hTableUsers.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 
@@ -378,12 +400,12 @@ public class HbaseClient extends DB {
 				Bytes.toBytes(creatorID));
 		Scan scan = new Scan();
 		scan.setFilter(filter);
-		HTableInterface resources = null;
 		ResultScanner rs = null;
 		try {
-			resources = connection.getTable(RESOURCE_TABLE);
+			if (hTableResources == null)
+				hTableResources = new HTable(conf, RESOURCE_TABLE);
 			try {
-				rs = resources.getScanner(scan);
+				rs = hTableResources.getScanner(scan);
 				for (Result r = rs.next(); r != null; r = rs.next()) {
 					HashMap<String, ByteIterator> attr = new HashMap<String, ByteIterator>();
 					attr.put("creatorid",
@@ -411,7 +433,7 @@ public class HbaseClient extends DB {
 			} catch (IOException e) {
 				throw e;
 			} finally {
-				resources.close();
+				hTableResources.close();
 			}
 
 		} catch (IOException e) {
@@ -435,15 +457,15 @@ public class HbaseClient extends DB {
 		list.add(put1);
 		list.add(put2);
 
-		HTableInterface Users = null;
 		try {
-			Users = connection.getTable(USER_TABLE);
+			if (hTableUsers == null)
+				hTableUsers = new HTable(conf, USER_TABLE);
 			try {
-				Users.put(list);
+				hTableUsers.put(list);
 			} catch (IOException e) {
 				throw e;
 			} finally {
-				Users.close();
+				hTableUsers.close();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -466,17 +488,17 @@ public class HbaseClient extends DB {
 		getProfileData.addFamily(FRIENDS);
 		if (insertImage)
 			getProfileData.addFamily(IMAGES);
-		HTableInterface Users;
 		Result r = null;
 		try {
-			Users = connection.getTable(USER_TABLE);
+			if (hTableUsers == null)
+				hTableUsers = new HTable(conf, USER_TABLE);
 			try {
-				r = Users.get(getProfileData);
+				r = hTableUsers.get(getProfileData);
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new IOException(e);
 			} finally {
-				Users.close();
+				hTableUsers.close();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -496,14 +518,15 @@ public class HbaseClient extends DB {
 		result.put("address", getIterator(r.getValue(PROFILE_INFO, ADDRESS)));
 		result.put("email", getIterator(r.getValue(PROFILE_INFO, EMAIL)));
 		result.put("tel", getIterator(r.getValue(PROFILE_INFO, TEL)));
-		
+
 		byte[] resourceCount = r.getValue(PROFILE_INFO, RESOURCE_COUNT);
-		if(resourceCount == null){
+		if (resourceCount == null) {
 			result.put("resourcecount", new StringByteIterator("0"));
-		}else{
-		result.put(
-				"resourcecount",
-				new StringByteIterator(Long.toString(Bytes.toLong(resourceCount))));
+		} else {
+			result.put(
+					"resourcecount",
+					new StringByteIterator(Long.toString(Bytes
+							.toLong(resourceCount))));
 		}
 		if (insertImage) {
 			byte[] blob = r.getValue(IMAGES, PIC);
@@ -534,245 +557,14 @@ public class HbaseClient extends DB {
 	}
 
 	@Override
-	public int listFriends(int requesterID, int profileOwnerID,
+	abstract public int listFriends(int requesterID, int profileOwnerID,
 			Set<String> fields, Vector<HashMap<String, ByteIterator>> result,
-			boolean insertImage, boolean testMode) {
-		if (result == null)
-			throw new IllegalArgumentException("HashMap result not initialized");
-
-		Get getFriendsIDs = new Get(Bytes.toBytes(Integer
-				.toString(profileOwnerID)));
-		getFriendsIDs.addFamily(FRIENDS);
-		HTableInterface Users;
-		ResultScanner rs = null;
-		Result r = null;
-		try {
-			Users = connection.getTable(USER_TABLE);
-			try {
-				r = Users.get(getFriendsIDs);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				Users.close();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return -1;
-		}
-		NavigableMap<byte[], byte[]> everyone = r.getFamilyMap(FRIENDS);
-		FilterList list = new FilterList(Operator.MUST_PASS_ONE);
-		for (Map.Entry<byte[], byte[]> entry : everyone.entrySet()) {
-			if (Arrays.equals(entry.getValue(), FriendshipStatus.FRIENDS)) {
-				RegexStringComparator keyRegEx = new RegexStringComparator("^"
-						+ Bytes.toString(entry.getKey()) + "$");
-				RowFilter rowFilter = new RowFilter(CompareOp.EQUAL, keyRegEx);
-				list.addFilter(rowFilter);
-			}
-		}
-		Scan getFriendProfiles = new Scan();
-		getFriendProfiles.setFilter(list);
-		getFriendProfiles.setStartRow(Bytes.toBytes("0"));
-		if (fields != null) {
-			for (String attr : fields) {
-				if (attr.equalsIgnoreCase("userid")) {
-					continue;
-				} else if (attr.equalsIgnoreCase("pic") && insertImage) {
-					getFriendProfiles.addColumn(PROFILE_INFO,
-							mappingToBG.get(attr));
-				}
-				getFriendProfiles
-						.addColumn(PROFILE_INFO, mappingToBG.get(attr));
-			}
-		}
-		try {
-			Users = connection.getTable(USER_TABLE);
-			try {
-				rs = Users.getScanner(getFriendProfiles);
-
-				// userid, username, pw, fname, lname, gender, dob, jdate,
-				// ldate,
-				// address, email, tel, tpic, pic
-				for (r = rs.next(); r != null; r = rs.next()) {
-					HashMap<String, ByteIterator> user = new HashMap<String, ByteIterator>();
-					if (fields == null || fields.contains("userid")) {
-						user.put("userid", getIterator(r.getRow()));
-					}
-					if (fields == null || fields.contains("username")) {
-						user.put("username", getIterator(r.getValue(
-								PROFILE_INFO, mappingToBG.get("username"))));
-					}
-					if (fields == null || fields.contains("username")) {
-						user.put("username", getIterator(r.getValue(
-								PROFILE_INFO, mappingToBG.get("username"))));
-					}
-					if (fields == null || fields.contains("pw")) {
-						user.put("pw", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("pw"))));
-					}
-					if (fields == null || fields.contains("fname")) {
-						user.put("fname", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("fname"))));
-					}
-					if (fields == null || fields.contains("lname")) {
-						user.put("lname", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("lname"))));
-					}
-					if (fields == null || fields.contains("gender")) {
-						user.put("gender", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("gender"))));
-					}
-					if (fields == null || fields.contains("dob")) {
-						user.put("dob", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("dob"))));
-					}
-					if (fields == null || fields.contains("jdate")) {
-						user.put("jdate", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("jdate"))));
-					}
-					if (fields == null || fields.contains("ldate")) {
-						user.put("ldate", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("ldate"))));
-					}
-					if (fields == null || fields.contains("address")) {
-						user.put("address", getIterator(r.getValue(
-								PROFILE_INFO, mappingToBG.get("address"))));
-					}
-					if ((fields == null || fields.contains("pic"))
-							&& insertImage) {
-						byte[] blob = r
-								.getValue(IMAGES, mappingToBG.get("pic"));
-						if (testMode) {
-							saveToFileSystem(profileOwnerID, blob);
-						}
-						user.put("pic", getIterator(blob));
-					}
-					result.add(user);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				throw e;
-			} finally {
-				Users.close();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return -1;
-		}
-		return 0;
-	}
+			boolean insertImage, boolean testMode);
 
 	@Override
-	public int viewFriendReq(int profileOwnerID,
+	abstract public int viewFriendReq(int profileOwnerID,
 			Vector<HashMap<String, ByteIterator>> results, boolean insertImage,
-			boolean testMode) {
-		if (results == null)
-			throw new IllegalArgumentException("Vector results not initialized");
-
-		Get getFriends = new Get(
-				Bytes.toBytes(Integer.toString(profileOwnerID)));
-		getFriends.addFamily(FRIENDS);
-		HTableInterface Users;
-		Result r = null;
-		try {
-			Users = connection.getTable(USER_TABLE);
-			try {
-				r = Users.get(getFriends);
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new IOException(e);
-			} finally {
-				Users.close();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return -1;
-		}
-		NavigableMap<byte[], byte[]> everyone = r.getFamilyMap(FRIENDS);
-		FilterList list = new FilterList(Operator.MUST_PASS_ONE);
-		for (Map.Entry<byte[], byte[]> entry : everyone.entrySet()) {
-			if (Arrays.equals(entry.getValue(),
-					FriendshipStatus.INVITATION_RECIEVED)) {
-				RegexStringComparator keyRegEx = new RegexStringComparator("^"
-						+ Bytes.toString(entry.getKey()) + "$");
-				RowFilter rowFilter = new RowFilter(CompareOp.EQUAL, keyRegEx);
-				list.addFilter(rowFilter);
-			}
-		}
-		Scan getPendingFriendProfiles = new Scan();
-		getPendingFriendProfiles.setFilter(list);
-		ResultScanner rs = null;
-		try {
-			Users = connection.getTable(USER_TABLE);
-			try {
-				rs = Users.getScanner(getPendingFriendProfiles);
-
-				for (r = rs.next(); r != null; r = rs.next()) {
-					HashMap<String, ByteIterator> user = new HashMap<String, ByteIterator>();
-					user.put("userid", getIterator(r.getRow()));
-					user.put(
-							"username",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("username"))));
-					user.put(
-							"username",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("username"))));
-					user.put(
-							"pw",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("pw"))));
-					user.put(
-							"fname",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("fname"))));
-					user.put(
-							"lname",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("lname"))));
-					user.put(
-							"gender",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("gender"))));
-					user.put(
-							"dob",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("dob"))));
-					user.put(
-							"jdate",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("jdate"))));
-					user.put(
-							"ldate",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("ldate"))));
-					user.put(
-							"address",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("address"))));
-					if (insertImage) {
-						byte[] blob = r
-								.getValue(IMAGES, mappingToBG.get("pic"));
-						user.put("pic", getIterator(blob));
-					}
-					results.add(user);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new IOException(e);
-			} finally {
-				Users.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			return -1;
-		}
-		return 0;
-	}
+			boolean testMode); 
 
 	@Override
 	public int acceptFriend(int inviterID, int inviteeID) {
@@ -791,16 +583,16 @@ public class HbaseClient extends DB {
 		updateInviter.add(FRIENDS, invitee, FriendshipStatus.FRIENDS);
 		updates.add(updateInviter);
 
-		HTableInterface users = null;
 		try {
-			users = connection.getTable(USER_TABLE);
+			if (hTableUsers == null)
+				hTableUsers = new HTable(conf, USER_TABLE);
 			try {
-				users.put(updates);
+				hTableUsers.put(updates);
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new IOException(e);
 			} finally {
-				users.close();
+				hTableUsers.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -820,15 +612,15 @@ public class HbaseClient extends DB {
 		byte[] inviter = Bytes.toBytes(Integer.toString(inviterID));
 		Put updateInvitee = new Put(invitee);
 		updateInvitee.add(FRIENDS, inviter, FriendshipStatus.REJECTED);
-		HTableInterface users = null;
 		try {
-			users = connection.getTable(USER_TABLE);
+			if (hTableUsers == null)
+				hTableUsers = new HTable(conf, USER_TABLE);
 			try {
-				users.put(updateInvitee);
+				hTableUsers.put(updateInvitee);
 			} catch (IOException e) {
 				throw e;
 			} finally {
-				users.close();
+				hTableUsers.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -851,16 +643,16 @@ public class HbaseClient extends DB {
 		List<Put> list = new ArrayList<Put>();
 		list.add(put1);
 		list.add(put2);
-		HTableInterface Users = null;
 		try {
-			Users = connection.getTable(USER_TABLE);
+			if (hTableUsers == null)
+				hTableUsers = new HTable(conf, USER_TABLE);
 			try {
 
-				Users.put(list);
+				hTableUsers.put(list);
 			} catch (IOException e) {
 				throw e;
 			} finally {
-				Users.close();
+				hTableUsers.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -884,16 +676,16 @@ public class HbaseClient extends DB {
 		updateInviter.add(FRIENDS, invitee, FriendshipStatus.THAWED);
 		updates.add(updateInviter);
 
-		HTableInterface users = null;
 		try {
-			users = connection.getTable(USER_TABLE);
+			if (hTableUsers == null)
+				hTableUsers = new HTable(conf, USER_TABLE);
 			try {
-				users.put(updates);
+				hTableUsers.put(updates);
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new IOException(e);
 			} finally {
-				users.close();
+				hTableUsers.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -910,16 +702,17 @@ public class HbaseClient extends DB {
 		scan.setStopRow(Bytes.toBytes(Integer.toString(profileOwnerID) + "."));
 		PageFilter limit = new PageFilter(k);
 		scan.setFilter(limit);
-		HTableInterface resources = null;
 		ResultScanner rs = null;
 		try {
-			resources = connection.getTable(RESOURCE_TABLE);
+			if (hTableResources == null)
+				hTableResources = new HTable(conf, RESOURCE_TABLE);
 			try {
-				rs = resources.getScanner(scan);
+				rs = hTableResources.getScanner(scan);
 				for (Result r = rs.next(); r != null; r = rs.next()) {
 					// TODO: make this work for multiple regionservers
 					HashMap<String, ByteIterator> resource = new HashMap<String, ByteIterator>();
-					resource.put("rid", getIterator(r.getValue(RESOURCE_INFO, RESOURCE_ID)));
+					resource.put("rid",
+							getIterator(r.getValue(RESOURCE_INFO, RESOURCE_ID)));
 					resource.put("walluserid",
 							getIterator(Bytes.toBytes(profileOwnerID)));
 					resource.put("creatorid",
@@ -936,7 +729,7 @@ public class HbaseClient extends DB {
 			} catch (IOException e) {
 				throw (e);
 			} finally {
-				resources.close();
+				hTableResources.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -952,12 +745,12 @@ public class HbaseClient extends DB {
 		getComments.setStartRow(Bytes.toBytes(Integer.toString(resourceID)));
 		getComments
 				.setStopRow(Bytes.toBytes(Integer.toString(resourceID) + "."));
-		HTableInterface manipulations = null;
 		ResultScanner rs = null;
 		try {
-			manipulations = connection.getTable(MANIPULATION_TABLE);
+			if (hTableManipulations == null)
+				hTableManipulations = new HTable(conf, MANIPULATION_TABLE);
 			try {
-				rs = manipulations.getScanner(getComments);
+				rs = hTableManipulations.getScanner(getComments);
 				for (Result r = rs.next(); r != null; r = rs.next()) {
 					HashMap<String, ByteIterator> commentAttr = new HashMap<String, ByteIterator>();
 					for (Map.Entry<byte[], byte[]> entry : r.getFamilyMap(
@@ -970,7 +763,7 @@ public class HbaseClient extends DB {
 			} catch (IOException e) {
 				throw e;
 			} finally {
-				manipulations.close();
+				hTableManipulations.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -992,19 +785,22 @@ public class HbaseClient extends DB {
 			put.add(MANIIPULATION_DEFAULT_CF, Bytes.toBytes(attr.getKey()),
 					attr.getValue().toArray());
 		}
-		put.add(MANIIPULATION_DEFAULT_CF, CREATOR_ID, Bytes.toBytes(Integer.toString(resourceCreatorID)));
-		put.add(MANIIPULATION_DEFAULT_CF, RESOURCE_ID, Bytes.toBytes(Integer.toString(resourceID)));
-		put.add(MANIIPULATION_DEFAULT_CF, MODIFIER_ID, Bytes.toBytes(Integer.toString(commentCreatorID)));
+		put.add(MANIIPULATION_DEFAULT_CF, CREATOR_ID,
+				Bytes.toBytes(Integer.toString(resourceCreatorID)));
+		put.add(MANIIPULATION_DEFAULT_CF, RESOURCE_ID,
+				Bytes.toBytes(Integer.toString(resourceID)));
+		put.add(MANIIPULATION_DEFAULT_CF, MODIFIER_ID,
+				Bytes.toBytes(Integer.toString(commentCreatorID)));
 
-		HTableInterface manipulations = null;
 		try {
-			manipulations = connection.getTable(MANIPULATION_TABLE);
+			if (hTableManipulations == null)
+				hTableManipulations = new HTable(conf, MANIPULATION_TABLE);
 			try {
-				manipulations.put(put);
+				hTableManipulations.put(put);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
-				manipulations.close();
+				hTableManipulations.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -1019,16 +815,16 @@ public class HbaseClient extends DB {
 			int manipulationID) {
 		Delete delete = new Delete(Bytes.toBytes(Integer.toString(resourceID)
 				+ "-" + Integer.toString(manipulationID)));
-		HTableInterface manipulations = null;
 		try {
-			manipulations = connection.getTable(MANIPULATION_TABLE);
+			if (hTableManipulations == null)
+				hTableManipulations = new HTable(conf, MANIPULATION_TABLE);
 			try {
-				manipulations.delete(delete);
+				hTableManipulations.delete(delete);
 				;
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
-				manipulations.close();
+				hTableManipulations.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -1043,9 +839,10 @@ public class HbaseClient extends DB {
 		Get getFriends = new Get(Bytes.toBytes(Integer.toString(memberID)));
 		getFriends.addFamily(FRIENDS);
 		try {
-			HTableInterface users = connection.getTable(USER_TABLE);
-			Result friends = users.get(getFriends);
-			users.close();
+			if (hTableUsers == null)
+				hTableUsers = new HTable(conf, USER_TABLE);
+			Result friends = hTableUsers.get(getFriends);
+			hTableUsers.close();
 			NavigableMap<byte[], byte[]> everyone = friends
 					.getFamilyMap(FRIENDS);
 
@@ -1071,9 +868,10 @@ public class HbaseClient extends DB {
 		Get getFriends = new Get(Bytes.toBytes(Integer.toString(memberID)));
 		getFriends.addFamily(FRIENDS);
 		try {
-			HTableInterface users = connection.getTable(USER_TABLE);
-			Result friends = users.get(getFriends);
-			users.close();
+			if (hTableUsers == null)
+				hTableUsers = new HTable(conf, USER_TABLE);
+			Result friends = hTableUsers.get(getFriends);
+			hTableUsers.close();
 			NavigableMap<byte[], byte[]> everyone = friends
 					.getFamilyMap(FRIENDS);
 
@@ -1093,11 +891,11 @@ public class HbaseClient extends DB {
 	}
 
 	// Auxilary
-	private ByteIterator getIterator(byte[] array) {
+	protected ByteIterator getIterator(byte[] array) {
 		return new ByteArrayByteIterator(array);
 	}
 
-	private void saveToFileSystem(int profileOwnerID, byte[] blob) {
+	protected void saveToFileSystem(int profileOwnerID, byte[] blob) {
 		try {
 			FileOutputStream fos = new FileOutputStream(profileOwnerID
 					+ "-proimage.bmp");
@@ -1139,13 +937,13 @@ public class HbaseClient extends DB {
 		Scan rowScan = new Scan();
 		rowScan.setFilter(rowFilter);
 
-		HTableInterface Resources = null;
 		ResultScanner rs = null;
 		Result row = null;
 		try {
-			Resources = connection.getTable(RESOURCE_TABLE);
+			if (hTableResources == null)
+				hTableResources = new HTable(conf, RESOURCE_TABLE);
 			try {
-				rs = Resources.getScanner(rowScan);
+				rs = hTableResources.getScanner(rowScan);
 				int count = 0;
 				for (row = rs.next(); row != null; row = rs.next()) {
 					count++;
@@ -1155,7 +953,7 @@ public class HbaseClient extends DB {
 			} catch (IOException e) {
 				throw e;
 			} finally {
-				Resources.close();
+				hTableResources.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
