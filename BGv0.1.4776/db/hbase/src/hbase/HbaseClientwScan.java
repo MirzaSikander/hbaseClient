@@ -36,14 +36,8 @@ public class HbaseClientwScan extends HbaseClient {
 		try {
 			if (hTableUsers == null)
 				hTableUsers = new HTable(conf, USER_TABLE);
-			try {
-				r = hTableUsers.get(getFriends);
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new IOException(e);
-			} finally {
-				hTableUsers.close();
-			}
+			r = hTableUsers.get(getFriends);
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,72 +60,61 @@ public class HbaseClientwScan extends HbaseClient {
 		try {
 			if (hTableUsers == null)
 				hTableUsers = new HTable(conf, USER_TABLE);
-			try {
-				rs = hTableUsers.getScanner(getPendingFriendProfiles);
+			rs = hTableUsers.getScanner(getPendingFriendProfiles);
 
-				for (r = rs.next(); r != null; r = rs.next()) {
-					HashMap<String, ByteIterator> user = new HashMap<String, ByteIterator>();
-					user.put("userid", getIterator(r.getRow()));
-					user.put(
-							"username",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("username"))));
-					user.put(
-							"username",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("username"))));
-					user.put(
-							"pw",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("pw"))));
-					user.put(
-							"fname",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("fname"))));
-					user.put(
-							"lname",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("lname"))));
-					user.put(
-							"gender",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("gender"))));
-					user.put(
-							"dob",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("dob"))));
-					user.put(
-							"jdate",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("jdate"))));
-					user.put(
-							"ldate",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("ldate"))));
-					user.put(
-							"address",
-							getIterator(r.getValue(PROFILE_INFO,
-									mappingToBG.get("address"))));
-					if (insertImage) {
-						byte[] blob = r
-								.getValue(IMAGES, mappingToBG.get("pic"));
-						user.put("pic", getIterator(blob));
-					}
-					results.add(user);
+			for (r = rs.next(); r != null; r = rs.next()) {
+				HashMap<String, ByteIterator> user = new HashMap<String, ByteIterator>();
+				user.put("userid", getIterator(r.getRow()));
+				user.put(
+						"username",
+						getIterator(r.getValue(PROFILE_INFO,
+								mappingToBG.get("username"))));
+				user.put(
+						"pw",
+						getIterator(r.getValue(PROFILE_INFO,
+								mappingToBG.get("pw"))));
+				user.put(
+						"fname",
+						getIterator(r.getValue(PROFILE_INFO,
+								mappingToBG.get("fname"))));
+				user.put(
+						"lname",
+						getIterator(r.getValue(PROFILE_INFO,
+								mappingToBG.get("lname"))));
+				user.put(
+						"gender",
+						getIterator(r.getValue(PROFILE_INFO,
+								mappingToBG.get("gender"))));
+				user.put(
+						"dob",
+						getIterator(r.getValue(PROFILE_INFO,
+								mappingToBG.get("dob"))));
+				user.put(
+						"jdate",
+						getIterator(r.getValue(PROFILE_INFO,
+								mappingToBG.get("jdate"))));
+				user.put(
+						"ldate",
+						getIterator(r.getValue(PROFILE_INFO,
+								mappingToBG.get("ldate"))));
+				user.put(
+						"address",
+						getIterator(r.getValue(PROFILE_INFO,
+								mappingToBG.get("address"))));
+				if (insertImage) {
+					byte[] blob = r.getValue(IMAGES, mappingToBG.get("pic"));
+					user.put("pic", getIterator(blob));
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new IOException(e);
-			} finally {
-				hTableUsers.close();
+				results.add(user);
 			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			return -1;
 		}
-		return 0;	
+		return 0;
 	}
-	
+
 	public int listFriends(int requesterID, int profileOwnerID,
 			Set<String> fields, Vector<HashMap<String, ByteIterator>> result,
 			boolean insertImage, boolean testMode) {
@@ -146,14 +129,7 @@ public class HbaseClientwScan extends HbaseClient {
 		try {
 			if (hTableUsers == null)
 				hTableUsers = new HTable(conf, USER_TABLE);
-			try {
-				r = hTableUsers.get(getFriendsIDs);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				hTableUsers.close();
-			}
+			r = hTableUsers.get(getFriendsIDs);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -185,74 +161,84 @@ public class HbaseClientwScan extends HbaseClient {
 			}
 		}
 		try {
-			try {
-				rs = hTableUsers.getScanner(getFriendProfiles);
+			rs = hTableUsers.getScanner(getFriendProfiles);
 
-				// userid, username, pw, fname, lname, gender, dob, jdate,
-				// ldate,
-				// address, email, tel, tpic, pic
-				for (r = rs.next(); r != null; r = rs.next()) {
-					HashMap<String, ByteIterator> user = new HashMap<String, ByteIterator>();
-					if (fields == null || fields.contains("userid")) {
-						user.put("userid", getIterator(r.getRow()));
-					}
-					if (fields == null || fields.contains("username")) {
-						user.put("username", getIterator(r.getValue(
-								PROFILE_INFO, mappingToBG.get("username"))));
-					}
-					if (fields == null || fields.contains("username")) {
-						user.put("username", getIterator(r.getValue(
-								PROFILE_INFO, mappingToBG.get("username"))));
-					}
-					if (fields == null || fields.contains("pw")) {
-						user.put("pw", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("pw"))));
-					}
-					if (fields == null || fields.contains("fname")) {
-						user.put("fname", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("fname"))));
-					}
-					if (fields == null || fields.contains("lname")) {
-						user.put("lname", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("lname"))));
-					}
-					if (fields == null || fields.contains("gender")) {
-						user.put("gender", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("gender"))));
-					}
-					if (fields == null || fields.contains("dob")) {
-						user.put("dob", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("dob"))));
-					}
-					if (fields == null || fields.contains("jdate")) {
-						user.put("jdate", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("jdate"))));
-					}
-					if (fields == null || fields.contains("ldate")) {
-						user.put("ldate", getIterator(r.getValue(PROFILE_INFO,
-								mappingToBG.get("ldate"))));
-					}
-					if (fields == null || fields.contains("address")) {
-						user.put("address", getIterator(r.getValue(
-								PROFILE_INFO, mappingToBG.get("address"))));
-					}
-					if ((fields == null || fields.contains("pic"))
-							&& insertImage) {
-						byte[] blob = r
-								.getValue(IMAGES, mappingToBG.get("pic"));
-						if (testMode) {
-							saveToFileSystem(profileOwnerID, blob);
-						}
-						user.put("pic", getIterator(blob));
-					}
-					result.add(user);
+			// userid, username, pw, fname, lname, gender, dob, jdate,
+			// ldate,
+			// address, email, tel, tpic, pic
+			for (r = rs.next(); r != null; r = rs.next()) {
+				HashMap<String, ByteIterator> user = new HashMap<String, ByteIterator>();
+				if (fields == null || fields.contains("userid")) {
+					user.put("userid", getIterator(r.getRow()));
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				throw e;
-			} finally {
-				hTableUsers.close();
+				if (fields == null || fields.contains("username")) {
+					user.put(
+							"username",
+							getIterator(r.getValue(PROFILE_INFO,
+									mappingToBG.get("username"))));
+				}
+				if (fields == null || fields.contains("username")) {
+					user.put(
+							"username",
+							getIterator(r.getValue(PROFILE_INFO,
+									mappingToBG.get("username"))));
+				}
+				if (fields == null || fields.contains("pw")) {
+					user.put(
+							"pw",
+							getIterator(r.getValue(PROFILE_INFO,
+									mappingToBG.get("pw"))));
+				}
+				if (fields == null || fields.contains("fname")) {
+					user.put(
+							"fname",
+							getIterator(r.getValue(PROFILE_INFO,
+									mappingToBG.get("fname"))));
+				}
+				if (fields == null || fields.contains("lname")) {
+					user.put(
+							"lname",
+							getIterator(r.getValue(PROFILE_INFO,
+									mappingToBG.get("lname"))));
+				}
+				if (fields == null || fields.contains("gender")) {
+					user.put(
+							"gender",
+							getIterator(r.getValue(PROFILE_INFO,
+									mappingToBG.get("gender"))));
+				}
+				if (fields == null || fields.contains("dob")) {
+					user.put(
+							"dob",
+							getIterator(r.getValue(PROFILE_INFO,
+									mappingToBG.get("dob"))));
+				}
+				if (fields == null || fields.contains("jdate")) {
+					user.put(
+							"jdate",
+							getIterator(r.getValue(PROFILE_INFO,
+									mappingToBG.get("jdate"))));
+				}
+				if (fields == null || fields.contains("ldate")) {
+					user.put(
+							"ldate",
+							getIterator(r.getValue(PROFILE_INFO,
+									mappingToBG.get("ldate"))));
+				}
+				if (fields == null || fields.contains("address")) {
+					user.put(
+							"address",
+							getIterator(r.getValue(PROFILE_INFO,
+									mappingToBG.get("address"))));
+				}
+				if ((fields == null || fields.contains("pic")) && insertImage) {
+					byte[] blob = r.getValue(IMAGES, mappingToBG.get("pic"));
+					if (testMode) {
+						saveToFileSystem(profileOwnerID, blob);
+					}
+					user.put("pic", getIterator(blob));
+				}
+				result.add(user);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -262,5 +248,4 @@ public class HbaseClientwScan extends HbaseClient {
 		return 0;
 	}
 
-	
 }
