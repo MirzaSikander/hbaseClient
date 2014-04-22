@@ -9,8 +9,6 @@
 	<classpathentry kind="lib" path="lib/cosarjdbcOracle.jar"/>
 	<classpathentry kind="lib" path="lib/ehcache-core-2.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/IntervalTree.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-core-asl-1.5.2.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-mapper-asl-1.5.2.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.18-bin.jar"/>
 	<classpathentry kind="lib" path="lib/ojdbc6.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.5.6.jar"/>
@@ -37,8 +35,6 @@
 	<classpathentry kind="lib" path="db/hbase/lib/htrace-core-2.04.jar"/>
 	<classpathentry kind="lib" path="db/hbase/lib/netty-3.6.6.Final.jar"/>
 	<classpathentry kind="lib" path="db/hbase/lib/commons-codec-1.7.jar"/>
-	<classpathentry kind="lib" path="db/hbase/lib/jackson-mapper-asl-1.8.8.jar"/>
-	<classpathentry kind="lib" path="db/hbase/lib/jackson-core-asl-1.5.2.jar"/>
-	<classpathentry kind="lib" path="db/hbase/lib/jackson-mapper-asl-1.5.2.jar"/>
+	<classpathentry kind="lib" path="db/hbase/lib/jackson-all-1.9.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
