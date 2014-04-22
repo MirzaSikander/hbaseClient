@@ -23,6 +23,10 @@ import org.apache.hadoop.hbase.util.Bytes;
 import edu.usc.bg.base.ByteIterator;
 
 public class HbaseClientwScan extends HbaseClient {
+	public HbaseClientwScan() {
+
+	}
+
 	public int viewFriendReq(int profileOwnerID,
 			Vector<HashMap<String, ByteIterator>> results, boolean insertImage,
 			boolean testMode) {
@@ -37,7 +41,6 @@ public class HbaseClientwScan extends HbaseClient {
 			if (hTableUsers == null)
 				hTableUsers = new HTable(conf, USER_TABLE);
 			r = hTableUsers.get(getFriends);
-
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
