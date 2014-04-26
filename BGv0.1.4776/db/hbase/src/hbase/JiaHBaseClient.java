@@ -59,6 +59,9 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 	public boolean init() throws DBException {
 		try {
 			hbaseConf = HBaseConfiguration.create();
+			hbaseConf.set("hbase.zookeeper.quorum", "mstoshiba");
+			hbaseConf.set("hbase.zookeeper.property.clientPort","2222");
+			hbaseConf.set("hbase.master", "mstoshiba:60000");
 //			hbaseConf.set("hbase.zookeeper.quorum", "10.0.0.180");
 //			hbaseConf.set("hbase.zookeeper.property.clientPort", "2181");
 //			hbaseConf.set("hbase.master","hdfs://10.0.0.180:60000");
