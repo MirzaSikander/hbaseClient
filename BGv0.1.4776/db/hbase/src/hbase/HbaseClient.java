@@ -122,6 +122,9 @@ public abstract class HbaseClient extends DB {
 	@Override
 	public boolean init() throws DBException {
 		conf = HBaseConfiguration.create();
+		conf.set("hbase.zookeeper.quorum", "mstoshiba");
+		conf.set("hbase.zookeeper.property.clientPort","2222");
+		conf.set("hbase.master", "mstoshiba:60000");
 		HBaseAdmin hba;
 		try {
 			hba = new HBaseAdmin(conf);

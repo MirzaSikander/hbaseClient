@@ -69,6 +69,12 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			//hbaseConf.set("hbase.zookeeper.property.clientPort",p.getProperty(ZOOKEEPER_PORT, ZOOKEEPER_PORT_DEFAULT));
 			userCount = Integer.parseInt(p.getProperty(USERCOUNT));
 			userOffset = Integer.parseInt(p.getProperty(USEROFFSET));
+			//hbaseConf.set("hbase.zookeeper.quorum", "mstoshiba");
+			//hbaseConf.set("hbase.zookeeper.property.clientPort","2222");
+			//hbaseConf.set("hbase.master", "mstoshiba:60000");
+//			hbaseConf.set("hbase.zookeeper.quorum", "10.0.0.180");
+//			hbaseConf.set("hbase.zookeeper.property.clientPort", "2181");
+//			hbaseConf.set("hbase.master","hdfs://10.0.0.180:60000");
 			hAdmin = new HBaseAdmin(hbaseConf);
 			ClusterStatus status = hAdmin.getClusterStatus();
 			regionServerCount = status.getServersSize();
