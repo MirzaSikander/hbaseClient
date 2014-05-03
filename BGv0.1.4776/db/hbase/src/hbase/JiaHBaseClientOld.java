@@ -1,5 +1,7 @@
 package hbase;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +17,6 @@ import java.util.Vector;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellScanner;
-import org.apache.hadoop.hbase.ClusterStatus;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
@@ -32,55 +33,46 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 import edu.usc.bg.base.ByteIterator;
 import edu.usc.bg.base.DB;
 import edu.usc.bg.base.DBException;
 import edu.usc.bg.base.ObjectByteIterator;
 
-public class JiaHBaseClient extends DB implements HBaseClientConstants {
+public class JiaHBaseClientOld extends DB implements HBaseClientConstantsOld {
 
 	public static final int SUCCESS = 0;
 	public static final int ERROR = -1;
 
 	private HBaseAdmin hAdmin;
 	private HTable hTableMember;
+//	private HTable hTableImage;
 	private HTable hTablePendingFriend;
 	private HTable hTableConfirmedFriend;
 	private HTable hTableResourceOwner;
 	private HTable hTableResource;
 	private HTable hTableManipulation;
 	private Configuration hbaseConf;
-	private Properties p;
 	
-	private int userCount=0;
-	private int userOffset=0;
-	private int regionServerCount=0;
-
 
 	@Override
 	public boolean init() throws DBException {
 		try {
-			p = getProperties();
 			hbaseConf = HBaseConfiguration.create();
-			//hbaseConf.set("hbase.zookeeper.quorum", p.getProperty(ZOOKEEPER_IP, ZOOKEEPER_IP_DEFAULT));
-			//hbaseConf.set("hbase.zookeeper.property.clientPort",p.getProperty(ZOOKEEPER_PORT, ZOOKEEPER_PORT_DEFAULT));
-			userCount = Integer.parseInt(p.getProperty(USERCOUNT));
-			userOffset = Integer.parseInt(p.getProperty(USEROFFSET));
+			hbaseConf.set("hbase.zookeeper.quorum", "mstoshiba");
+			hbaseConf.set("hbase.master", "mstoshiba:60000");
+//			hbaseConf.set("hbase.zookeeper.quorum", "10.0.0.180");
+//			hbaseConf.set("hbase.zookeeper.property.clientPort", "2181");
+//			hbaseConf.set("hbase.master","hdfs://10.0.0.180:60000");
 			hAdmin = new HBaseAdmin(hbaseConf);
-			ClusterStatus status = hAdmin.getClusterStatus();
-			regionServerCount = status.getServersSize();
 			if(hAdmin.tableExists(MemberTable)) hTableMember = new HTable(hbaseConf, MemberTable);
 			if(hAdmin.tableExists(PendingFriendTable)) hTablePendingFriend = new HTable(hbaseConf, PendingFriendTable);
 			if(hAdmin.tableExists(ConfirmedFriendTable)) hTableConfirmedFriend = new HTable(hbaseConf, ConfirmedFriendTable);
 			if(hAdmin.tableExists(ResourceTable)) hTableResource = new HTable(hbaseConf, ResourceTable);
 			if(hAdmin.tableExists(ResourceOwnerTable)) hTableResourceOwner = new HTable(hbaseConf, ResourceOwnerTable);
 			if(hAdmin.tableExists(ManipulationTable)) hTableManipulation = new HTable(hbaseConf, ManipulationTable);
-
-			Logger.getRootLogger().setLevel(Level.WARN);
-
+			
+			
 		} catch (IOException e) {
 			e.printStackTrace(System.out);
 			return false;
@@ -93,6 +85,7 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 		try {
 			if (hAdmin != null)
 				hAdmin.close();
+
 			if (hTableMember != null)
 				hTableMember.close();
 			if (hTablePendingFriend != null)
@@ -105,6 +98,7 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 				hTableResourceOwner.close();
 			if (hTableManipulation != null)
 				hTableManipulation.close();
+
 			if (hbaseConf != null)
 				hbaseConf.clear();
 
@@ -130,33 +124,26 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 
 				Put p = new Put(Bytes.toBytes(Integer.parseInt(entityPK)));
 				for (Entry<String, ByteIterator> entry : values.entrySet()) {
-					if (entry.getKey() != "pic" && entry.getKey() != "tpic") {
+					if (entry.getKey() != "pic") {
 						p.add(Bytes.toBytes("attributes"), Bytes.toBytes(entry
 								.getKey()), entry.getValue().toArray());
 					}
 				}
 				
 				// insert image data
-				if (insertImage ){  
-					if(values.containsKey("pic")){
-						byte[] imageByteArray = values.get("pic").toArray();
-						p.add(Bytes.toBytes("profilelImg"), Bytes
-								.toBytes("data"), imageByteArray); 
-					}
-					if(values.containsKey("tpic")){
-						byte[] imageByteArray = values.get("tpic").toArray();
-						p.add(Bytes.toBytes("thumbImg"), Bytes
-								.toBytes("data"), imageByteArray); 
-					}
+				if (insertImage && values.containsKey("pic")){  
+					byte[] imageByteArray = values.get("pic").toArray();
+					p.add(Bytes.toBytes("profilelImg"), Bytes
+							.toBytes("data"), imageByteArray); 
 				}
-
-
+				
+				
 				// initailize three count
-
+				
 				p.add(Bytes.toBytes("attributes"), PendingFriendsCount, Bytes.toBytes(((long)(0))) );
 				p.add(Bytes.toBytes("attributes"), ConfirmedFriendsCount, Bytes.toBytes(((long)(0))) );
 				p.add(Bytes.toBytes("attributes"), ResourceCount, Bytes.toBytes(((long)(0))) );
-
+				
 				hTableMember.put(p);
 
 
@@ -195,7 +182,7 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 				p2.add(Bytes.toBytes("resources"), Bytes.toBytes(Integer.parseInt(entityPK)),
 						Bytes.toBytes(""));
 				hTableResourceOwner.put(p2);
-
+				
 				// increase resource count;
 				if(hTableMember == null){
 					hTableMember = new HTable(hbaseConf, MemberTable);
@@ -224,17 +211,13 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			}
 
 			Get getInfo = new Get(Bytes.toBytes(profileOwnerID));
-			getInfo.addFamily(Bytes.toBytes("attributes"));
-			if(insertImage==true){
-				getInfo.addFamily(Bytes.toBytes("profilelImg"));
-			}
 			Result queryResult = hTableMember.get(getInfo);
-
+			
 			// fetch the basic info
 			Map<byte[], byte[]> infoMap = queryResult.getFamilyMap(Bytes.toBytes("attributes"));
 			for(Entry<byte[], byte[]> entry : infoMap.entrySet()){
 				String key = new String(entry.getKey());
-				if(key.equals("pw")==false){
+				if(key.equals("pw")==false && key.equals("tpic")==false){
 					if(key.equals("resourcecount") || key.equals("friendcount") || key.equals("pendingcount")){
 						if(key.equals("pendingcount") && requesterID != profileOwnerID) continue;
 						result.put(key, new ObjectByteIterator(Bytes.toBytes(String.valueOf(Bytes.toLong(entry.getValue()))))) ;
@@ -243,11 +226,66 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 					}
 				}
 			}
-
+			
+			
 			if(insertImage){
 				byte[] imageValue = queryResult.getValue(Bytes.toBytes("profilelImg"), Bytes.toBytes("data"));
 				result.put("pic", new ObjectByteIterator(imageValue));
+//				if(testMode){
+//					try {
+//						FileOutputStream fos = new FileOutputStream(
+//								new File("/Users/Jia/Documents/imageOutput/"+profileOwnerID + "-proimage.jpeg"));
+//						fos.write(imageValue);
+//						fos.close();
+//					} catch (Exception ex) {
+//						ex.printStackTrace(System.out);
+//						return ERROR;
+//					}
+//				}
 			}
+
+			
+			// removed since these count is already included in the member table
+//			if(hTableResourceOwner == null){
+//				hTableResourceOwner = new HTable(hbaseConf, ResourceOwnerTable);
+//			}
+//			Get getRid = new Get(Bytes.toBytes(profileOwnerID));
+//			Result rids = hTableResourceOwner.get(getRid);
+//			Map resourceMap = rids.getFamilyMap(Bytes.toBytes("resources"));
+//			int numResource = 0;
+//			if(resourceMap!=null){
+//				numResource = resourceMap.size(); 
+//			}
+//			result.put("resourcecount", new ObjectByteIterator(Bytes.toBytes(String.valueOf(numResource))));
+//
+//			if(hTableConfirmedFriend ==null){
+//				hTableConfirmedFriend = new HTable(hbaseConf, ConfirmedFriendTable);
+//			}
+//			Get getConfirmedFriend = new Get(Bytes.toBytes(profileOwnerID));
+//			Result confirmedFriends = hTableConfirmedFriend.get(getConfirmedFriend);
+//			int numConfirmedFriends = 0;
+//			if(confirmedFriends.isEmpty()==false){
+//				Map map = confirmedFriends.getFamilyMap(Bytes.toBytes("confirmedFriends"));
+//				if(map!=null) numConfirmedFriends = map.size();
+//			}
+//			result.put("friendcount", new ObjectByteIterator(Bytes.toBytes(String.valueOf(numConfirmedFriends))));
+//			
+//			if(requesterID == profileOwnerID){
+//				int numPendingFriends = 0;
+//				if(hTablePendingFriend ==null){
+//					hTablePendingFriend = new HTable(hbaseConf, PendingFriendTable);
+//				}
+//				Get getPendingFriend = new Get(Bytes.toBytes(profileOwnerID));
+//				Result pendingFriends = hTablePendingFriend.get(getPendingFriend);
+//				
+//				if(pendingFriends.isEmpty()==false){
+//					Map map = pendingFriends.getFamilyMap(Bytes.toBytes("pendingFriends"));
+//					if(map!=null) numPendingFriends = map.size();
+//				}
+//				result.put("pendingcount", new ObjectByteIterator(Bytes.toBytes(String.valueOf(numPendingFriends))));
+//			}
+
+
 		}catch(IOException e){
 			e.printStackTrace(System.out);
 		}
@@ -259,7 +297,6 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			Set<String> fields, Vector<HashMap<String, ByteIterator>> result,
 			boolean insertImage, boolean testMode) {
 		// TODO Auto-generated method stub
-
 		if(requesterID<0 || profileOwnerID<0) return ERROR;
 		try{
 
@@ -276,54 +313,56 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 
 			Map<byte[], byte[]> friends = hTableConfirmedFriend.get(getFriendID).getFamilyMap(Bytes.toBytes("confirmedFriends"));
 
-			// for each friends, get the info
+			// for each friends, get his info
 			if(friends!=null){
-				List<Get> friendInfoGets = new LinkedList<Get>();
-				for(Entry<byte[], byte[]> entry : friends.entrySet()){
+				for(Entry<byte[], byte[]> entry : friends.entrySet()){  
 					byte[] friendID = entry.getKey();
-					Get get = new Get(friendID);
-					get.addFamily(Bytes.toBytes("attributes"));
-					if(insertImage){
-						get.addFamily(Bytes.toBytes("thumbImg"));
-					}
-					friendInfoGets.add(get);
-				}
-
-				Result[] getResults = hTableMember.get(friendInfoGets);
-				for(Result friendInfo : getResults){
-					byte[] friendID = friendInfo.getRow();
+					Get getFriendInfo = new Get(friendID);
+					Result friendInfo = hTableMember.get(getFriendInfo);
 					HashMap<String, ByteIterator> infoMap = new HashMap<String, ByteIterator>();
-					infoMap.put("userid", new ObjectByteIterator(friendID));
-
+					infoMap.put("userid", new ObjectByteIterator(friendInfo.getRow()));
 					if(fields!=null){
-						Map<byte[],byte[]> attributeMap = friendInfo.getFamilyMap(Bytes.toBytes("attributes"));
-						for(Entry<byte[], byte[]> entry : attributeMap.entrySet()){
-							String key = Bytes.toString(entry.getKey());
-							if(fields.contains( key ) && !key.equals("pwd")){
-								infoMap.put( key, new ObjectByteIterator(entry.getValue()));
+						for(Cell cell : friendInfo.rawCells()){
+							String key = Bytes.toString(cell.getQualifier());
+							if(fields.contains( key ) && !key.equals("tpic") && !key.equals("pwd")){
+								infoMap.put( key, new ObjectByteIterator(cell.getValue()));
 							}
-						}
-						if(insertImage){
-							byte[] image = friendInfo.getValue(Bytes.toBytes("thumbImg"), Bytes.toBytes("data"));
-							infoMap.put("pic", new ObjectByteIterator(image));
-						}
-					}else{
-						
-						Map<byte[],byte[]> attributeMap = friendInfo.getFamilyMap(Bytes.toBytes("attributes"));
-						for(Entry<byte[], byte[]> entry : attributeMap.entrySet()){
-							String key = Bytes.toString(entry.getKey());
-							if(!key.equals("pwd")){
-								if(key.equals("resourcecount")==false && key.equals("friendcount")==false && key.equals("pendingcount")==false){
-									infoMap.put(key, new ObjectByteIterator(entry.getValue()));
+							if( key.equals("tpic") && insertImage){
+								infoMap.put( "pic" , new ObjectByteIterator(cell.getValue()));
+								if(testMode){
+									try {
+										FileOutputStream fos = new FileOutputStream(
+												new File(friendID + "-thumbimage.bmp"));
+										fos.write(cell.getValue());
+										fos.close();
+									} catch (Exception ex) {
+										ex.printStackTrace(System.out);
+									}
 								}
 							}
 						}
-						if(insertImage){
-							byte[] image = friendInfo.getValue(Bytes.toBytes("thumbImg"), Bytes.toBytes("data"));
-							infoMap.put("pic", new ObjectByteIterator(image));
+					}else{
+						for(Cell cell : friendInfo.rawCells()){
+							String key = Bytes.toString(cell.getQualifier());
+	
+							if(key.equals("pwd")==false && key.equals("tpic")==false){
+								infoMap.put(Bytes.toString(cell.getQualifier()), new ObjectByteIterator(cell.getValue()));
+							}
+	
+							if( key.equals("tpic") && insertImage){
+								infoMap.put( "pic" , new ObjectByteIterator(cell.getValue()));
+								if(testMode){
+									try {
+										FileOutputStream fos = new FileOutputStream(
+												new File(friendID + "-thumbimage.bmp"));
+										fos.write(cell.getValue());
+										fos.close();
+									} catch (Exception ex) {
+										ex.printStackTrace(System.out);
+									}
+								}
+							}
 						}
-						
-						
 					}
 					result.add(infoMap);
 				}
@@ -333,13 +372,157 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			return ERROR;
 		}
 		return SUCCESS;
-		
+
+//		if(requesterID<0 || profileOwnerID<0) return ERROR;
+//		try{
+//
+//			if(hTableConfirmedFriend == null){
+//				hTableConfirmedFriend = new HTable(hbaseConf, ConfirmedFriendTable);
+//			}
+//
+//			if(hTableMember == null){
+//				hTableMember = new HTable(hbaseConf, MemberTable);
+//			}
+//
+//
+//			Get getFriendID = new Get(Bytes.toBytes(profileOwnerID));
+//
+//			Map<byte[], byte[]> friends = hTableConfirmedFriend.get(getFriendID).getFamilyMap(Bytes.toBytes("confirmedFriends"));
+//
+//			// for each friends, get the info
+//			if(friends!=null){
+//				List<Get> friendInfoGets = new LinkedList<Get>();
+//				for(Entry<byte[], byte[]> entry : friends.entrySet()){
+//					byte[] friendID = entry.getKey();
+//					Get get = new Get(friendID);
+//					friendInfoGets.add(get);
+//				}
+//				
+//				Result[] getResults = hTableMember.get(friendInfoGets);
+//				for(Result friendInfo : getResults){
+//					byte[] friendID = friendInfo.getRow();
+//					HashMap<String, ByteIterator> infoMap = new HashMap<String, ByteIterator>();
+//					infoMap.put("userid", new ObjectByteIterator(friendID));
+//					
+//					if(fields!=null){
+//						for(Cell cell : friendInfo.listCells()){
+//							String key = Bytes.toString(cell.getQualifierArray());
+//							if(fields.contains( key ) && !key.equals("tpic") && !key.equals("pwd")){
+//								infoMap.put( key, new ObjectByteIterator(cell.getValueArray()));
+//							}
+//							if( key.equals("tpic") && insertImage){
+//								infoMap.put( "pic" , new ObjectByteIterator(cell.getValueArray()));
+//								if(testMode){
+//									try {
+//										FileOutputStream fos = new FileOutputStream(
+//												new File(String.valueOf(friendID) + "-thumbimage.bmp"));
+//										fos.write(cell.getValueArray());
+//										fos.close();
+//									} catch (Exception ex) {
+//										ex.printStackTrace(System.out);
+//									}
+//								}
+//							}
+//						}
+//					}else{
+//						for(Cell cell : friendInfo.rawCells()){
+//							String key = Bytes.toString(cell.getQualifierArray());
+//	
+//							if(key.equals("pwd")==false && key.equals("tpic")==false && key.endsWith("count")==false){
+//								infoMap.put(Bytes.toString(cell.getQualifierArray()), new ObjectByteIterator(cell.getValueArray()));
+//							}
+//	
+//							if( key.equals("tpic") && insertImage){
+//								infoMap.put( "pic" , new ObjectByteIterator(cell.getValueArray()));
+//								if(testMode){
+//									try {
+//										FileOutputStream fos = new FileOutputStream(
+//												new File(String.valueOf(friendID) + "-thumbimage.bmp"));
+//										fos.write(cell.getValueArray());
+//										fos.close();
+//									} catch (Exception ex) {
+//										ex.printStackTrace(System.out);
+//									}
+//								}
+//							}
+//						}
+//					}
+//					result.add(infoMap);
+//				}
+//			}
+//		}catch(IOException e){
+//			e.printStackTrace(System.out);
+//			return ERROR;
+//		}
+//		return SUCCESS;
 	}
 
 	@Override
 	public int viewFriendReq(int profileOwnerID,
 			Vector<HashMap<String, ByteIterator>> results, boolean insertImage,
 			boolean testMode) {
+		// TODO Auto-generated method stub
+//		if(profileOwnerID<0) return ERROR;
+//		try{
+//
+//			if(hTablePendingFriend == null){
+//				hTablePendingFriend = new HTable(hbaseConf, PendingFriendTable);
+//			}
+//
+//			if(hTableMember == null){
+//				hTableMember = new HTable(hbaseConf, MemberTable);
+//			}
+//
+//
+//			Get getFriendID = new Get(Bytes.toBytes(profileOwnerID));
+//
+//			Map<byte[], byte[]> friends = hTablePendingFriend.get(getFriendID).getFamilyMap(Bytes.toBytes("pendingFriends"));
+//
+//			// for each friends, get his info
+//			if(friends!=null){
+//				List<Get> friendInfoGets = new LinkedList<Get>();
+//				for(Entry<byte[], byte[]> entry : friends.entrySet()){
+//					byte[] friendID = entry.getKey();
+//					Get get = new Get(friendID);
+//					friendInfoGets.add(get);
+//				}
+//				
+//				Result[] getResults = hTableMember.get(friendInfoGets);
+//				for(Result friendInfo : getResults){
+//					HashMap<String, ByteIterator> infoMap = new HashMap<String, ByteIterator>();
+//					infoMap.put("userid", new ObjectByteIterator(friendInfo.getRow()));
+//					for(Cell cell : friendInfo.listCells()){
+//						String key = Bytes.toString(cell.getQualifierArray());
+//
+//						if(key.equals("pwd")==false && key.equals("tpic")==false && key.endsWith("count")==false){
+//							infoMap.put(Bytes.toString(cell.getQualifierArray()), new ObjectByteIterator(cell.getValueArray()));
+//						}
+//
+//						if( key.equals("tpic") && insertImage){
+//							infoMap.put( "pic" , new ObjectByteIterator(cell.getValueArray()));
+//							if(testMode){
+//								try {
+//									String friendID = String.valueOf(friendInfo.getRow());
+//									FileOutputStream fos = new FileOutputStream(
+//											new File(friendID + "-thumbimage.bmp"));
+//									fos.write(cell.getValueArray());
+//									fos.close();
+//								} catch (Exception ex) {
+//									ex.printStackTrace(System.out);
+//								}
+//							}
+//						}
+//					}
+//
+//					results.add(infoMap);
+//				}
+//			}
+//		}catch(IOException e){
+//			e.printStackTrace(System.out);
+//			return ERROR;
+//		}
+//		return SUCCESS;
+
 		if(profileOwnerID<0) return ERROR;
 		try{
 
@@ -358,37 +541,34 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 
 			// for each friends, get his info
 			if(friends!=null){
-				List<Get> friendInfoGets = new LinkedList<Get>();
-				for(Entry<byte[], byte[]> entry : friends.entrySet()){
+				for(Entry<byte[], byte[]> entry : friends.entrySet()){  
 					byte[] friendID = entry.getKey();
-					Get get = new Get(friendID);
-					get.addFamily(Bytes.toBytes("attributes"));
-					if(insertImage){
-						get.addFamily(Bytes.toBytes("thumbImg"));
-					}
-					friendInfoGets.add(get);
-				}
-
-				Result[] getResults = hTableMember.get(friendInfoGets);
-				for(Result friendInfo : getResults){
-					byte[] friendID = friendInfo.getRow();
+					Get getFriendInfo = new Get(friendID);
+					Result friendInfo = hTableMember.get(getFriendInfo);
 					HashMap<String, ByteIterator> infoMap = new HashMap<String, ByteIterator>();
-					infoMap.put("userid", new ObjectByteIterator(friendID));
-						
-					Map<byte[],byte[]> attributeMap = friendInfo.getFamilyMap(Bytes.toBytes("attributes"));
-					for(Entry<byte[], byte[]> entry : attributeMap.entrySet()){
-						String key = Bytes.toString(entry.getKey());
-						if(!key.equals("pwd")){
-							if(key.equals("resourcecount")==false && key.equals("friendcount")==false && key.equals("pendingcount")==false){
-								infoMap.put(key, new ObjectByteIterator(entry.getValue()));
+					infoMap.put("userid", new ObjectByteIterator(friendInfo.getRow()));
+					for(Cell cell : friendInfo.rawCells()){
+						String key = Bytes.toString(cell.getQualifier());
+
+						if(key.equals("pwd")==false && key.equals("tpic")==false){
+							infoMap.put(Bytes.toString(cell.getQualifier()), new ObjectByteIterator(cell.getValue()));
+						}
+
+						if( key.equals("tpic") && insertImage){
+							infoMap.put( "pic" , new ObjectByteIterator(cell.getValue()));
+							if(testMode){
+								try {
+									FileOutputStream fos = new FileOutputStream(
+											new File(friendID + "-thumbimage.bmp"));
+									fos.write(cell.getValue());
+									fos.close();
+								} catch (Exception ex) {
+									ex.printStackTrace(System.out);
+								}
 							}
 						}
 					}
-					if(insertImage){
-						byte[] image = friendInfo.getValue(Bytes.toBytes("thumbImg"), Bytes.toBytes("data"));
-						infoMap.put("pic", new ObjectByteIterator(image));
-					}
-						
+
 					results.add(infoMap);
 				}
 			}
@@ -397,7 +577,8 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			return ERROR;
 		}
 		return SUCCESS;
-	
+
+		
 	}
 
 	@Override
@@ -416,11 +597,11 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 				return ERROR;
 			}
 
-
+			
 			if(hTableConfirmedFriend == null){
 				hTableConfirmedFriend = new HTable(hbaseConf, ConfirmedFriendTable);
 			}
-
+			
 			List<Put> putList = new ArrayList<Put>();
 			Put put1 = new Put(Bytes.toBytes(inviterID));
 			put1.add( Bytes.toBytes("confirmedFriends"), Bytes.toBytes(inviteeID), Bytes.toBytes(""));
@@ -435,27 +616,27 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			Delete del = new Delete(Bytes.toBytes(inviteeID));
 			del.deleteColumn(Bytes.toBytes("pendingFriends"), Bytes.toBytes(inviterID));
 			hTablePendingFriend.delete(del);
-
-
+			
+			
 			// Update Friend Count
 			if(hTableMember == null){
 				hTableMember = new HTable(hbaseConf, MemberTable);
 			}
 			Increment inviterIncrement = new Increment(Bytes.toBytes(inviterID));
 			inviterIncrement.addColumn(Bytes.toBytes("attributes"), ConfirmedFriendsCount, (long)(1));
-
+			
 			Increment inviteeIncrement = new Increment(Bytes.toBytes(inviteeID));
 			inviteeIncrement.addColumn(Bytes.toBytes("attributes"), ConfirmedFriendsCount, (long)(1));
 			inviteeIncrement.addColumn(Bytes.toBytes("attributes"), PendingFriendsCount, (long)(-1));
-
+			
 			List<Increment> listIncrement = new LinkedList<Increment>();
 			listIncrement.add(inviterIncrement);
 			listIncrement.add(inviteeIncrement);
-
+			
 			Object[] result = new Object[listIncrement.size()];
-
+			
 			hTableMember.batch(listIncrement, result);
-
+			
 		}catch(IOException e){
 			e.printStackTrace(System.out);
 			return ERROR;
@@ -487,7 +668,7 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			if(hTableMember == null){
 				hTableMember = new HTable(hbaseConf, MemberTable);
 			}
-
+			
 			Increment inviteeIncrement = new Increment(Bytes.toBytes(inviteeID));
 			inviteeIncrement.addColumn(Bytes.toBytes("attributes"), PendingFriendsCount, (long)(-1));
 			hTableMember.increment(inviteeIncrement);
@@ -515,7 +696,7 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			p.add(Bytes.toBytes("pendingFriends"), Bytes.toBytes(inviterID),
 					Bytes.toBytes(""));
 			hTablePendingFriend.put(p);
-
+			
 			// update the count
 			if(hTableMember == null){
 				hTableMember = new HTable(hbaseConf, MemberTable);
@@ -536,6 +717,7 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 	public int viewTopKResources(int requesterID, int profileOwnerID, int k,
 			Vector<HashMap<String, ByteIterator>> result) {
 		// TODO Auto-generated method stub
+		
 		if(requesterID<0 || profileOwnerID<0){
 			return ERROR;
 		}
@@ -550,27 +732,20 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			Get getResourceID = new Get(Bytes.toBytes(profileOwnerID));
 			Result resourceIDs = hTableResourceOwner.get(getResourceID);
 			NavigableMap<byte[], byte[]> map = resourceIDs.getFamilyMap(Bytes.toBytes("resources"));
-			
+			int count = 0;
 			if(map!=null){
-				LinkedList<Get> ResourceGets = new LinkedList<Get>();
-				int count = 0;
 				for(byte[] rid : map.descendingKeySet()){
 					if(count>=k) break;
 					Get getResourceInfo = new Get(rid);
 					getResourceInfo.addFamily(Bytes.toBytes("resourceAttribute"));
-					ResourceGets.add(getResourceInfo);
-					count++;
-				}
-				
-				Result[] resourceInfos = hTableResource.get(ResourceGets);
-				
-				for(Result resourceInfo : resourceInfos){
+					Result resourceInfo = hTableResource.get(getResourceInfo);
 					HashMap<String, ByteIterator> item = new HashMap<String, ByteIterator>();
-					item.put("rid", new ObjectByteIterator(resourceInfo.getRow()));
+					item.put("rid", new ObjectByteIterator(rid));
 					for(Cell cell : resourceInfo.listCells()){
 						item.put(Bytes.toString(cell.getQualifierArray()), new ObjectByteIterator(cell.getValueArray()));
 					}
 					result.add(item);
+					count++;
 				}
 			}
 		}catch(Exception e){
@@ -578,12 +753,87 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			return ERROR;
 		}
 		return SUCCESS;
+
 		
+//		if(requesterID<0 || profileOwnerID<0){
+//			return ERROR;
+//		}
+//		try{
+//			if(hTableResourceOwner == null){
+//				hTableResourceOwner = new HTable(hbaseConf, ResourceOwnerTable);
+//			}
+//			if(hTableResource == null){
+//				hTableResource = new HTable(hbaseConf, ResourceTable);
+//			}
+//
+//			Get getResourceID = new Get(Bytes.toBytes(profileOwnerID));
+//			Result resourceIDs = hTableResourceOwner.get(getResourceID);
+//			NavigableMap<byte[], byte[]> map = resourceIDs.getFamilyMap(Bytes.toBytes("resources"));
+//			
+//			if(map!=null){
+//				LinkedList<Get> ResourceGets = new LinkedList<Get>();
+//				int count = 0;
+//				for(byte[] rid : map.descendingKeySet()){
+//					if(count>=k) break;
+//					Get getResourceInfo = new Get(rid);
+//					getResourceInfo.addFamily(Bytes.toBytes("resourceAttribute"));
+//					ResourceGets.add(getResourceInfo);
+//					count++;
+//				}
+//				
+//				Result[] resourceInfos = hTableResource.get(ResourceGets);
+//				
+//				for(Result resourceInfo : resourceInfos){
+//					HashMap<String, ByteIterator> item = new HashMap<String, ByteIterator>();
+//					item.put("rid", new ObjectByteIterator(resourceInfo.getRow()));
+//					for(Cell cell : resourceInfo.listCells()){
+//						item.put(Bytes.toString(cell.getQualifierArray()), new ObjectByteIterator(cell.getValueArray()));
+//					}
+//					result.add(item);
+//				}
+//			}
+//		}catch(Exception e){
+//			e.printStackTrace(System.out);
+//			return ERROR;
+//		}
+//		return SUCCESS;
 	}
 
 	@Override
 	public int getCreatedResources(int creatorID,
 			Vector<HashMap<String, ByteIterator>> result) {
+		// TODO Auto-generated method stub
+//		if (creatorID < 0)
+//			return ERROR;
+//		try {
+//			if (hTableResourceOwner == null) {
+//				hTableResourceOwner = new HTable(hbaseConf, ResourceOwnerTable);
+//			}
+//
+//			if (hTableResource == null) {
+//				hTableResource = new HTable(hbaseConf, ResourceTable);
+//			}
+//
+//			Get getRid = new Get(Bytes.toBytes(creatorID));
+//			getRid.addFamily(Bytes.toBytes("resources"));
+//			Result rids = hTableResourceOwner.get(getRid);
+//			for (KeyValue kv : rids.raw()) {
+//				byte[] rid = kv.getQualifier();
+//				Get getResource = new Get(rid);
+//				getResource.addFamily(Bytes.toBytes("resourceAttribute"));
+//				Result resource = hTableResource.get(getResource);
+//				HashMap<String, ByteIterator> map = new HashMap<String, ByteIterator>();
+//				for (KeyValue attribute : resource.raw()) {
+//					map.put(Bytes.toString(attribute.getQualifier()),
+//							new ObjectByteIterator(attribute.getValue()));
+//				}
+//				result.add(map);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace(System.out);
+//			return ERROR;
+//		}
+
 		return SUCCESS;
 	}
 
@@ -591,7 +841,7 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 	public int viewCommentOnResource(int requesterID, int profileOwnerID,
 			int resourceID, Vector<HashMap<String, ByteIterator>> result) {
 		// TODO Auto-generated method stub
-		
+
 		if (profileOwnerID < 0 || requesterID < 0 || resourceID < 0)
 			return ERROR;
 
@@ -636,7 +886,6 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			return ERROR;
 		}
 		return SUCCESS;
-		
 	}
 
 	@Override
@@ -741,23 +990,23 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			deleteList.add(del2);
 
 			hTableConfirmedFriend.delete(deleteList);
-
+			
 			// update count
 			if(hTableMember == null){
 				hTableMember = new HTable(hbaseConf, MemberTable);
 			}
 			Increment Increment1 = new Increment(Bytes.toBytes(friendid1));
 			Increment1.addColumn(Bytes.toBytes("attributes"), ConfirmedFriendsCount, (long)(-1));
-
+			
 			Increment Increment2 = new Increment(Bytes.toBytes(friendid2));
 			Increment2.addColumn(Bytes.toBytes("attributes"), ConfirmedFriendsCount, (long)(-1));
-
+			
 			List<Increment> listIncrement = new LinkedList<Increment>();
 			listIncrement.add(Increment1);
 			listIncrement.add(Increment2);
-
+			
 			Object[] result = new Object[listIncrement.size()];
-
+			
 			hTableMember.batch(listIncrement, result);
 
 		}catch(IOException e){
@@ -787,7 +1036,7 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			long resouceCount = 0;
 			long pendingCount = 0;
 			long confirmedCount = 0;
-
+			
 			Result record = null;
 			while ((record = memberScanner.next())!=null) {
 				userCount++;
@@ -812,7 +1061,7 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			result.put("avgpendingperuser", String.valueOf(avgpendingperuser));
 
 			return result;
-
+			
 
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
@@ -840,28 +1089,28 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			p2.add(Bytes.toBytes("confirmedFriends"), Bytes.toBytes(friendid1),
 					Bytes.toBytes(""));
 			hTableConfirmedFriend.put(p2);
-
+			
 			//update count
 			if(hTableMember == null){
 				hTableMember = new HTable(hbaseConf, MemberTable);
 			}
 			Increment Increment1 = new Increment(Bytes.toBytes(friendid1));
 			Increment1.addColumn(Bytes.toBytes("attributes"), ConfirmedFriendsCount, (long)(1));
-			//			hTableMember.increment(Increment1);
-
+//			hTableMember.increment(Increment1);
+			
 			Increment Increment2 = new Increment(Bytes.toBytes(friendid2));
 			Increment2.addColumn(Bytes.toBytes("attributes"), ConfirmedFriendsCount, (long)(1));
-			//			hTableMember.increment(Increment2);
-
+//			hTableMember.increment(Increment2);
+			
 			List<Increment> listIncrement = new LinkedList<Increment>();
 			listIncrement.add(Increment1);
 			listIncrement.add(Increment2);
-
+			
 			Object[] result = new Object[listIncrement.size()];
 			hTableMember.batch(listIncrement, result);
-
-
-
+		
+			
+			
 
 		} catch (IOException e) {
 			e.printStackTrace(System.out);
@@ -877,49 +1126,12 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 	@Override
 	public void createSchema(Properties props) {
 		// TODO Auto-generated method stub
-		createSpanningTable(MemberTable, MemberCF, userOffset,userCount, regionServerCount);
-		createSpanningTable(PendingFriendTable, PendingFriendCF,userOffset, userCount, regionServerCount);
-		createSpanningTable(ConfirmedFriendTable, ConfirmedFriendCF, userOffset, userCount, regionServerCount);
+		createTable(MemberTable, MemberCF);
+		createTable(PendingFriendTable, PendingFriendCF);
+		createTable(ConfirmedFriendTable, ConfirmedFriendCF);
 		createTable(ResourceTable, ResourceCF);
 		createTable(ResourceOwnerTable, ResourceOwnerCF);
 		createTable(ManipulationTable, ManipulationCF);
-	}
-	
-	public void createSpanningTable(String tablename, String[] cfs, int start, int end, int numRegions){
-		try {
-			if (hAdmin.tableExists(tablename)) {
-				hAdmin.disableTable(tablename);
-				hAdmin.deleteTable(tablename);
-			}
-
-			HTableDescriptor tableDesc = new HTableDescriptor(
-					TableName.valueOf(tablename));
-			for (int i = 0; i < cfs.length; i++) {
-				tableDesc.addFamily(new HColumnDescriptor(cfs[i]));
-			}
-			
-			if(numRegions>1){
-				byte[][] split = new byte[numRegions-1][];
-				int step = (end-start)/numRegions;
-				for(int i=1; i<=numRegions-1; i++){
-					split[i-1] = Bytes.toBytes(start + i*step);
-				}
-				
-				hAdmin.createTable(tableDesc, split);
-			}else{
-				hAdmin.createTable(tableDesc);
-			}
-			
-			
-			
-			
-		} catch (MasterNotRunningException e) {
-			e.printStackTrace();
-		} catch (ZooKeeperConnectionException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void createTable(String tablename, String[] cfs) {
@@ -992,6 +1204,8 @@ public class JiaHBaseClient extends DB implements HBaseClientConstants {
 			e.printStackTrace(System.out);
 			return ERROR;
 		}
+
 		return 0;
 	}
+
 }
