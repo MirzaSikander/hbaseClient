@@ -27,10 +27,9 @@ import org.apache.hadoop.hbase.client.Increment;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
+import org.apache.hadoop.hbase.client.Row;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
-import org.apache.hadoop.hbase.filter.FilterList;
-import org.apache.hadoop.hbase.filter.FilterList.Operator;
 import org.apache.hadoop.hbase.filter.PageFilter;
 import org.apache.hadoop.hbase.filter.RegexStringComparator;
 import org.apache.hadoop.hbase.filter.RowFilter;
@@ -59,6 +58,8 @@ public abstract class HbaseClient extends DB {
 	public static final byte[] EMAIL = "e".getBytes();
 	public static final byte[] TEL = "tel".getBytes();
 	public static final byte[] RESOURCE_COUNT = "rc".getBytes();
+	public static final byte[] FRIENDS_COUNT = "fc".getBytes();
+	public static final byte[] PENDING_FRIENDS_COUNT = "pfc".getBytes();
 
 	public static final byte[] IMAGES = "im".getBytes();
 	public static final byte[] PIC = "pic".getBytes();
@@ -122,9 +123,9 @@ public abstract class HbaseClient extends DB {
 	@Override
 	public boolean init() throws DBException {
 		conf = HBaseConfiguration.create();
-		conf.set("hbase.zookeeper.quorum", "mstoshiba");
-		conf.set("hbase.zookeeper.property.clientPort","2222");
-		conf.set("hbase.master", "mstoshiba:60000");
+		conf.set("hbase.zookeeper.quorum", "localhost");
+		// conf.set("hbase.zookeeper.property.clientPort","2222");
+		// conf.set("hbase.master", "mstoshiba:60000");
 		HBaseAdmin hba;
 		try {
 			hba = new HBaseAdmin(conf);
@@ -427,18 +428,30 @@ public abstract class HbaseClient extends DB {
 		Put put2 = new Put(Bytes.toBytes(Integer.toString(friendid2)));
 		put2.add(FRIENDS, Bytes.toBytes(Integer.toString(friendid1)),
 				FriendshipStatus.FRIENDS);
-		List<Put> list = new ArrayList<Put>();
+		// adding a count in users
+		Increment inc1 = new Increment(Bytes.toBytes(Integer
+				.toString(friendid1)));
+		Increment inc2 = new Increment(Bytes.toBytes(Integer
+				.toString(friendid2)));
+		inc1.addColumn(PROFILE_INFO, FRIENDS_COUNT, 1L);
+		inc2.addColumn(PROFILE_INFO, FRIENDS_COUNT, 1L);
+		List<Row> list = new ArrayList<Row>();
 		list.add(put1);
 		list.add(put2);
-
+		list.add(inc1);
+		list.add(inc2);
 		try {
 			if (hTableUsers == null)
 				hTableUsers = new HTable(conf, USER_TABLE);
-			hTableUsers.put(list);
+			Object[] result = null;
+			hTableUsers.batch(list, result);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return -1;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return 0;
 	}
@@ -453,7 +466,7 @@ public abstract class HbaseClient extends DB {
 		Get getProfileData = new Get(Bytes.toBytes(Integer
 				.toString(profileOwnerID)));
 		getProfileData.addFamily(PROFILE_INFO);
-		getProfileData.addFamily(FRIENDS);
+		// getProfileData.addFamily(FRIENDS);
 		if (insertImage)
 			getProfileData.addFamily(IMAGES);
 		Result r = null;
@@ -480,6 +493,27 @@ public abstract class HbaseClient extends DB {
 		result.put("email", getIterator(r.getValue(PROFILE_INFO, EMAIL)));
 		result.put("tel", getIterator(r.getValue(PROFILE_INFO, TEL)));
 
+		byte[] friendsCount = r.getValue(PROFILE_INFO, FRIENDS_COUNT);
+		if (friendsCount == null) {
+			result.put("friendcount", new StringByteIterator("0"));
+		} else {
+			result.put(
+					"friendcount",
+					new StringByteIterator(Long.toString(Bytes
+							.toLong(friendsCount))));
+		}
+		byte[] pendingFriendsCount = r.getValue(PROFILE_INFO,
+				PENDING_FRIENDS_COUNT);
+		if (requesterID == profileOwnerID) {
+			if (pendingFriendsCount == null) {
+				result.put("pendingcount", new StringByteIterator("0"));
+			} else {
+				result.put(
+						"pendingcount",
+						new StringByteIterator(Long.toString(Bytes
+								.toLong(pendingFriendsCount))));
+			}
+		}
 		byte[] resourceCount = r.getValue(PROFILE_INFO, RESOURCE_COUNT);
 		if (resourceCount == null) {
 			result.put("resourcecount", new StringByteIterator("0"));
@@ -497,22 +531,22 @@ public abstract class HbaseClient extends DB {
 			}
 			result.put("pic", getIterator(blob));
 		}
-		NavigableMap<byte[], byte[]> everyone = r.getFamilyMap(FRIENDS);
-		int confirmedFriend = 0, pendingFriend = 0;
-		for (Map.Entry<byte[], byte[]> entry : everyone.entrySet()) {
-			if (Arrays.equals(entry.getValue(), FriendshipStatus.FRIENDS)) {
-				confirmedFriend++;
-			} else if (Arrays.equals(entry.getValue(),
-					FriendshipStatus.INVITATION_RECIEVED)) {
-				pendingFriend++;
-			}
-		}
-		result.put("friendcount",
-				new StringByteIterator(Integer.toString(confirmedFriend)));
-		if (requesterID == profileOwnerID) {
-			result.put("pendingcount",
-					new StringByteIterator(Integer.toString(pendingFriend)));
-		}
+		// NavigableMap<byte[], byte[]> everyone = r.getFamilyMap(FRIENDS);
+		// int confirmedFriend = 0, pendingFriend = 0;
+		// for (Map.Entry<byte[], byte[]> entry : everyone.entrySet()) {
+		// if (Arrays.equals(entry.getValue(), FriendshipStatus.FRIENDS)) {
+		// confirmedFriend++;
+		// } else if (Arrays.equals(entry.getValue(),
+		// FriendshipStatus.INVITATION_RECIEVED)) {
+		// pendingFriend++;
+		// }
+		// }
+		// result.put("friendcount",
+		// new StringByteIterator(Integer.toString(confirmedFriend)));
+		// if (requesterID == profileOwnerID) {
+		// result.put("pendingcount",
+		// new StringByteIterator(Integer.toString(pendingFriend)));
+		// }
 
 		return 0;
 	}
@@ -531,7 +565,7 @@ public abstract class HbaseClient extends DB {
 	public int acceptFriend(int inviterID, int inviteeID) {
 		// unchecked update of data whether there was an invitation exchange or
 		// not
-		List<Put> updates = new ArrayList<Put>(2);
+		List<Row> updates = new ArrayList<Row>(4);
 
 		byte[] invitee = Bytes.toBytes(Integer.toString(inviteeID));
 		byte[] inviter = Bytes.toBytes(Integer.toString(inviterID));
@@ -544,13 +578,27 @@ public abstract class HbaseClient extends DB {
 		updateInviter.add(FRIENDS, invitee, FriendshipStatus.FRIENDS);
 		updates.add(updateInviter);
 
+		Increment inc1 = new Increment(invitee);
+		//increment friend count but also decrement pending count
+		inc1.addColumn(PROFILE_INFO, FRIENDS_COUNT, 1L);
+		inc1.addColumn(PROFILE_INFO, PENDING_FRIENDS_COUNT, -1L);
+		updates.add(inc1);
+
+		Increment inc2 = new Increment(inviter);
+		inc2.addColumn(PROFILE_INFO, FRIENDS_COUNT, 1L);
+		updates.add(inc2);
+
 		try {
 			if (hTableUsers == null)
 				hTableUsers = new HTable(conf, USER_TABLE);
-			hTableUsers.put(updates);
+			Object[]result = new Object[updates.size()];
+			hTableUsers.batch(updates, result);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return -1;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return 0;
 	}
@@ -561,18 +609,25 @@ public abstract class HbaseClient extends DB {
 	 * that on their page the invitee will still be listed as friendship request sent
 	 */
 	public int rejectFriend(int inviterID, int inviteeID) {
-
+		List<Row> updates = new ArrayList<Row>();
 		byte[] invitee = Bytes.toBytes(Integer.toString(inviteeID));
 		byte[] inviter = Bytes.toBytes(Integer.toString(inviterID));
 		Put updateInvitee = new Put(invitee);
 		updateInvitee.add(FRIENDS, inviter, FriendshipStatus.REJECTED);
+		updates.add(updateInvitee);
+		Increment inc = new Increment(invitee);
+		inc.addColumn(PROFILE_INFO, PENDING_FRIENDS_COUNT, -1L);
 		try {
 			if (hTableUsers == null)
 				hTableUsers = new HTable(conf, USER_TABLE);
-			hTableUsers.put(updateInvitee);
+			Object[]result = new Object[updates.size()];
+			hTableUsers.batch(updates,result);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return -1;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return 0;
 	}
@@ -581,30 +636,39 @@ public abstract class HbaseClient extends DB {
 	// This method has to be treated differently as this will be used in live
 	// testing and not just in preping
 	public int inviteFriend(int inviterID, int inviteeID) {
-		Put put1 = new Put(Bytes.toBytes(Integer.toString(inviterID)));
-		put1.add(FRIENDS, Bytes.toBytes(Integer.toString(inviteeID)),
-				FriendshipStatus.INVITATION_SENT);
+		List<Row> updates = new ArrayList<Row>();
+		byte[] inviter = Bytes.toBytes(Integer.toString(inviterID));
+		byte[] invitee = Bytes.toBytes(Integer.toString(inviteeID));
+		Put put1 = new Put(inviter);
+		put1.add(FRIENDS, invitee, FriendshipStatus.INVITATION_SENT);
+		updates.add(put1);
 
-		Put put2 = new Put(Bytes.toBytes(Integer.toString(inviteeID)));
-		put2.add(FRIENDS, Bytes.toBytes(Integer.toString(inviterID)),
-				FriendshipStatus.INVITATION_RECIEVED);
-		List<Put> list = new ArrayList<Put>();
-		list.add(put1);
-		list.add(put2);
+		Put put2 = new Put(invitee);
+		put2.add(FRIENDS, inviter, FriendshipStatus.INVITATION_RECIEVED);
+		updates.add(put2);
+
+		Increment inc1 = new Increment(invitee);
+		inc1.addColumn(PROFILE_INFO, PENDING_FRIENDS_COUNT, 1L);
+		updates.add(inc1);
+
 		try {
 			if (hTableUsers == null)
 				hTableUsers = new HTable(conf, USER_TABLE);
-			hTableUsers.put(list);
+			Object[] result = new Object[updates.size()];
+			hTableUsers.batch(updates, result);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return -1;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return 0;
 	}
 
 	@Override
 	public int thawFriendship(int friendid1, int friendid2) {
-		List<Put> updates = new ArrayList<Put>(2);
+		List<Row> updates = new ArrayList<Row>(4);
 
 		byte[] invitee = Bytes.toBytes(Integer.toString(friendid1));
 		byte[] inviter = Bytes.toBytes(Integer.toString(friendid2));
@@ -617,13 +681,25 @@ public abstract class HbaseClient extends DB {
 		updateInviter.add(FRIENDS, invitee, FriendshipStatus.THAWED);
 		updates.add(updateInviter);
 
+		Increment inc1 = new Increment(invitee);
+		//decrement friendcount
+		inc1.addColumn(PROFILE_INFO, FRIENDS_COUNT, -1L);
+		updates.add(inc1);
+
+		Increment inc2 = new Increment(inviter);
+		//decrement friendcountj
+		inc2.addColumn(PROFILE_INFO, FRIENDS_COUNT, -1L);
+		updates.add(inc2);
 		try {
 			if (hTableUsers == null)
 				hTableUsers = new HTable(conf, USER_TABLE);
-			hTableUsers.put(updates);
+			Object[]result = new Object[updates.size()];
+			hTableUsers.batch(updates, result);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return -1;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		return 0;
 	}
