@@ -2,7 +2,7 @@
 /MySQL
 /basicDB
 /common
-/edu
+#/edu
 #/hbase
 /hbase-site.xml
 /memcached
