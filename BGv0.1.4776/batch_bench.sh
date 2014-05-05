@@ -14,111 +14,111 @@ CMD="java -Xmx4096M edu/usc/bg/BGMainClass"
 
 $CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
 $CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f -p insertimage=false
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_viewprofile_10lt_1t_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=false
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_viewprofile_10lt_1t_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=false
 $CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_viewprofile_10lt_10t_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=false
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_viewprofile_10lt_100t_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=false
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_viewprofile_10lt_100t_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=false
 
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_viewprofile_10lt_1t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_viewprofile_10lt_10t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_viewprofile_10lt_100t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f_12 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_viewprofile_10lt_1t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_viewprofile_10lt_10t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_viewprofile_10lt_100t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
 
 
 #Jia ViewProfileActions (All 9 cases)
 
-$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_1t_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=false
-$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_10t_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=false
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_100t_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=false
-
 #$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_1t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.JiaHBaseClientt -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_10t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_100t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
-
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f_500 -p insertimage=true -p imagesize=500
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_1t_500 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=500
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_10t_500 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=500
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_100t_500 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=500
+#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_1t_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=false
+#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_10t_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=false
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_100t_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=false
+#
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f_12 -p insertimage=true -p imagesize=12
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_1t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
+##$CMD onetime -t -s -db hbase.JiaHBaseClientt -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_10t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_100t_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=12
+#
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f_500 -p insertimage=true -p imagesize=500
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_1t_500 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=500
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_10t_500 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=500
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ViewProfileAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_viewprofile_10lt_100t_500 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4 -p insertimage=true -p imagesize=500
 
 
 #Mirza ListFriendAction
 
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_10f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_10f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_10f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_10f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10
 
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_20f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_50f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_10f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_10f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10 -p insertimage=true -p imagesize=12
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_20f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20 -p insertimage=true -p imagesize=12
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_50f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50 -p insertimage=true -p imagesize=12
-#
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_20f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_50f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_10f_12 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_10f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10 -p insertimage=true -p imagesize=12
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f_12 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_20f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20 -p insertimage=true -p imagesize=12
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f_12 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_1t_50f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50 -p insertimage=true -p imagesize=12
+
 $CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
 $CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_10f
 $CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_10t_10f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_10t_20f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_10t_50f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_10f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_10t_10f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10 -p insertimage=true -p imagesize=12
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_10t_20f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20 -p insertimage=true -p imagesize=12
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_10t_50f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50 -p insertimage=true -p imagesize=12
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_10f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_10f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_20f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_50f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_10f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_10f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10 -p insertimage=true -p imagesize=12
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_20f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20 -p insertimage=true -p imagesize=12
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_50f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50 -p insertimage=true -p imagesize=12
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_10t_20f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_10t_50f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_10f_12 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_10t_10f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10 -p insertimage=true -p imagesize=12
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f_12 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_10t_20f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20 -p insertimage=true -p imagesize=12
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f_12 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_10t_50f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50 -p insertimage=true -p imagesize=12
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_10f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_10f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_20f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_50f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_10f_12 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_10f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10 -p insertimage=true -p imagesize=12
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f_12 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_20f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20 -p insertimage=true -p imagesize=12
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_50f_12 -p insertimage=true -p imagesize=12
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_listFriends_100t_50f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50 -p insertimage=true -p imagesize=12
 
 #jia ListFriendAction
 
@@ -146,91 +146,91 @@ $CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/ListFriendsAction 
 #$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_50f_12 -p insertimage=true -p imagesize=12
 #$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_1t_50f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50 -p insertimage=true -p imagesize=12
 #
-$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_10f
-$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_10f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10
-
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_20f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-#
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_50f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_50f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50
-#
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_10f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_10f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10 -p insertimage=true -p imagesize=12
-#
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_20f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20 -p insertimage=true -p imagesize=12
-#
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_50f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_50f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50 -p insertimage=true -p imagesize=12
-#
 #$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
 #$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_10f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_10f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10
+#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_10f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10
 #
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_20f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_20f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
+##
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_50f
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_50f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50
+##
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_10f_12 -p insertimage=true -p imagesize=12
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_10f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10 -p insertimage=true -p imagesize=12
+##
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f_12 -p insertimage=true -p imagesize=12
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_20f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20 -p insertimage=true -p imagesize=12
+##
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_50f_12 -p insertimage=true -p imagesize=12
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_10t_50f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50 -p insertimage=true -p imagesize=12
+##
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_10f
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_10f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10
+##
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_20f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
+##
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_50f
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_50f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50
+##
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_10f_12 -p insertimage=true -p imagesize=12
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_10f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10 -p insertimage=true -p imagesize=12
+##
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f_12 -p insertimage=true -p imagesize=12
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_20f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20 -p insertimage=true -p imagesize=12
+##
+##$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+##$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_50f_12 -p insertimage=true -p imagesize=12
+##$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_50f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50 -p insertimage=true -p imagesize=12
 #
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_50f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_50f_0 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50
-#
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_10F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_10f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_10f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=10 -p insertimage=true -p imagesize=12
-#
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_20F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_20f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20 -p insertimage=true -p imagesize=12
-#
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB_50F -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_50f_12 -p insertimage=true -p imagesize=12
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/ListFriendsAction -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_listFriends_100t_50f_12 -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=50 -p insertimage=true -p imagesize=12
-
 # Mirza Expt 4
 
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricVeryLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymvLowUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricVeryLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymvLowUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
 
 $CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
 $CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
 $CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricVeryLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymvLowUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
 
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricVeryLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymvLowUpdate_100t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymLowUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymLowUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymLowUpdate_100t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
-#
-#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_100t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricVeryLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymvLowUpdate_100t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymLowUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymLowUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymLowUpdate_100t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
+
+$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_4f
+$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_100t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
 
 #Jia expt 4
 
@@ -238,9 +238,9 @@ $CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricVeryLowUp
 #$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f
 #$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricVeryLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymvLowUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
 
-$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f
-$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricVeryLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymvLowUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
+#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f
+#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricVeryLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymvLowUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
 
 #$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
 #$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f
@@ -250,9 +250,9 @@ $CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricVeryLowUpd
 #$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f
 #$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymLowUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
 #
-$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f
-$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymLowUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
+#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
+#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f
+#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymLowUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
 #
 #$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
 #$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_4f
@@ -261,51 +261,14 @@ $CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricLowUpdateA
 
 #$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
 #$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-
-$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
-$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f
-$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
+#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
 
 #$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
 #$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f
-#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_100t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
+#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
 
-#Jia expt 4
+#$CMD onetime -schema -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_schema_creation
+#$CMD onetime -load -db hbase.HbaseClientwGet -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/m_populate_20f
+#$CMD onetime -t -s -db hbase.HbaseClientwGet -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/m_get_SymHighUpdate_100t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=4
 
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricVeryLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymvLowUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-
-$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
-$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricVeryLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymvLowUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricVeryLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymvLowUpdate_100t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-#
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymLowUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-
-$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
-$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymLowUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricLowUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymLowUpdate_100t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-#
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=1 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymHighUpdate_1t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-
-$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
-$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=10 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymHighUpdate_10t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-
-#$CMD onetime -schema -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_schema_creation
-#$CMD onetime -load -db hbase.JiaHBaseClient -P $BG/workloads/populateDB -p threadcount=10 -p exportfile=$LOG_DIR/jia_populate_20f
-#$CMD onetime -t -s -db hbase.JiaHBaseClient -P $BG/workloads/SymmetricHighUpdateActions -p maxexecutiontime=300 -p usercount=10000 -p threadcount=100 -p initapproach=deterministic -p exportfile=$LOG_DIR/jia_get_SymHighUpdate_100t -p resourcecountperuser=10 -p confperc=1 -p numloadthreads=10 -p useroffset=0 -p friendcountperuser=20
-
+echo 'All Benchmarks Done'
